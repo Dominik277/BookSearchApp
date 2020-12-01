@@ -1,10 +1,15 @@
 package book.search.app;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.MenuItemCompat;
 import okhttp3.Headers;
 
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.widget.ListView;
+import android.widget.SearchView;
 
 import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
 
@@ -29,10 +34,10 @@ public class BookListActivity extends AppCompatActivity {
         bookAdapter = new BookAdapter(this,aBooks);
         lvBooks.setAdapter(bookAdapter);
 
-        fetchBooks();
+        //fetchBooks();
     }
 
-    private void fetchBooks(){
+    private void fetchBooks(String query){
         client = new BookClient();
         client.getBooks("oscar Wilde", new JsonHttpResponseHandler() {
             @Override
@@ -60,5 +65,30 @@ public class BookListActivity extends AppCompatActivity {
 
 
         });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_book_list,menu);
+        final MenuItem searchItem = menu.findItem(R.id.action_search);
+        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                fetchBooks(query);
+                searchView.clearFocus();
+                searchView.getQuery();
+                searchView.setIconified(true);
+                searchItem.collapseActionView();
+                BookListActivity.this.setTitle(query);
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
+        return true;
     }
 }
