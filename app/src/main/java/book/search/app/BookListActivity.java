@@ -28,6 +28,8 @@ public class BookListActivity extends AppCompatActivity {
         ArrayList<Book> aBooks = new ArrayList<Book>();
         bookAdapter = new BookAdapter(this,aBooks);
         lvBooks.setAdapter(bookAdapter);
+
+        fetchBooks();
     }
 
     private void fetchBooks(){
