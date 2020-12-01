@@ -6,6 +6,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+
 public class Book {
 
     private String openLibraryId;
@@ -64,6 +66,24 @@ public class Book {
         }catch (JSONException e){
             return "";
         }
+    }
+
+    public static ArrayList<Book> fromJson(JSONArray jsonArray){
+        ArrayList<Book> books = new ArrayList<Book>(jsonArray.length());
+        for(int i=0; i<jsonArray.length(); i++){
+            JSONObject bookJson = null;
+            try {
+                bookJson = jsonArray.getJSONObject(i);
+            }catch (Exception e){
+                e.printStackTrace();
+                continue;
+            }
+            Book book = Book.fromJson(bookJson);
+            if (book != null){
+                books.add(book);
+            }
+        }
+        return books;
     }
 
 }
