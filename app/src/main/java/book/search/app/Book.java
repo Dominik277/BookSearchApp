@@ -1,5 +1,7 @@
 package book.search.app;
 
+import android.text.TextUtils;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -45,6 +47,22 @@ public class Book {
             book.author = getAuthor(jsonObject);
         }catch (JSONException e){
             e.printStackTrace();
+            return null;
+        }
+        return book;
+    }
+
+    private static String getAuthor(final JSONObject jsonObject){
+        try {
+            final JSONArray authors = jsonObject.getJSONArray("author_name");
+            int numAuthors = authors.length();
+            final String[] authorsString = new String[numAuthors];
+            for (int i=0; i<numAuthors; ++i){
+                authorsString[i] = authors.getString(i);
+            }
+            return TextUtils.join(", ", authorsString);
+        }catch (JSONException e){
+            return "";
         }
     }
 
