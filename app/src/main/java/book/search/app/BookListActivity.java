@@ -9,6 +9,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.SearchView;
 
 import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
@@ -23,6 +24,7 @@ public class BookListActivity extends AppCompatActivity {
     private ListView lvBooks;
     private BookAdapter bookAdapter;
     private BookClient client;
+    private ProgressBar progress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,16 +35,19 @@ public class BookListActivity extends AppCompatActivity {
         ArrayList<Book> aBooks = new ArrayList<Book>();
         bookAdapter = new BookAdapter(this,aBooks);
         lvBooks.setAdapter(bookAdapter);
+        progress = findViewById(R.id.progress);
 
         //fetchBooks();
     }
 
     private void fetchBooks(String query){
         client = new BookClient();
+        progress.setVisibility(ProgressBar.VISIBLE);
         client.getBooks("oscar Wilde", new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Headers headers, JSON response) {
                 try {
+                    progress.setVisibility(ProgressBar.GONE);
                     JSONArray docs = null;
                     if (response != null){
                         docs = response.getJSONArray("docs");
@@ -60,10 +65,8 @@ public class BookListActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
-
+                progress.setVisibility(ProgressBar.GONE);
             }
-
-
         });
     }
 
