@@ -4,10 +4,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.MenuItemCompat;
 import okhttp3.Headers;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.SearchView;
@@ -25,6 +28,7 @@ public class BookListActivity extends AppCompatActivity {
     private BookAdapter bookAdapter;
     private BookClient client;
     private ProgressBar progress;
+    public static final String BOOK_DETAIL_KEY = "book";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,4 +98,16 @@ public class BookListActivity extends AppCompatActivity {
         });
         return true;
     }
+
+    public void setupBookSelectedListener(){
+        lvBooks.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(BookListActivity.this,BookListActivity.class);
+                intent.putExtra(BOOK_DETAIL_KEY,bookAdapter.getItem(position));
+                startActivity(intent);
+            }
+        });
+    }
+
 }
