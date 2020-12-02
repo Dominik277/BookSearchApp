@@ -1,5 +1,6 @@
 package book.search.app;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -88,9 +89,21 @@ public class BookDetailActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 
         int id = item.getItemId();
-        if (id==R.id.action_search){
+        if (id==R.id.action_share){
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void setShareIntent(){
+        ImageView ivImage = findViewById(R.id.ivBookCover);
+        final TextView tvTitle = findViewById(R.id.tvTitle);
+        Uri bmpUri = getLocalBitmapUri(image);
+        Intent shareIntent = new Intent();
+        shareIntent.setAction(Intent.ACTION_SEND);
+        shareIntent.setType("*/*");
+        shareIntent.putExtra(Intent.EXTRA_TEXT, (String)tvTitle.getText());
+        shareIntent.putExtra(Intent.EXTRA_STREAM,bmpUri);
+        startActivity(Intent.createChooser(shareIntent,"Share Image"));
     }
 }
